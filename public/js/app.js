@@ -3,7 +3,7 @@
    ═══════════════════════════════════════════════ */
 
 
-   const API_URL = 'manhaus-production.up.railway.app';
+   const API_URL = 'https://manhaus-production.up.railway.app';
 
 // ─── State ──────────────────────────────────────
 const state = {
@@ -169,7 +169,7 @@ async function loadSlots() {
   loading.style.display = 'block';
 
   try {
-    const res = await fetch(`/api/available?barberId=${state.barberId}&date=${dateVal}`);
+    const res = await fetch(`${API_URL}/api/available?barberId=${state.barberId}&date=${dateVal}`);
     const data = await res.json();
     loading.style.display = 'none';
 
@@ -245,7 +245,7 @@ async function confirmBooking() {
   btn.innerHTML = '<span class="spinner"></span> Procesando...';
 
   try {
-    const res = await fetch('/api/appointments', {
+    const res = await fetch(`${API_URL}/api/appointments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -341,7 +341,7 @@ async function searchAppointment() {
   }
 
   try {
-    const res = await fetch(`/api/appointments/${code}`);
+    const res = await fetch(`${API_URL}/api/appointments/${code}`);
     const data = await res.json();
 
     if (!res.ok) {
@@ -402,7 +402,7 @@ async function cancelAppointment() {
   if (!confirm('¿Estás seguro de que deseas cancelar esta cita? Esta acción no se puede deshacer.')) return;
 
   try {
-    const res = await fetch(`/api/appointments/${state.currentAppt.code}`, { method: 'DELETE' });
+    const res = await fetch(`${API_URL}/api/appointments/${state.currentAppt.code}`, { method: 'DELETE' });
     const data = await res.json();
 
     if (!res.ok) {
@@ -439,7 +439,7 @@ async function loadEditSlots() {
   if (!barberId || !date) { container.innerHTML = ''; return; }
 
   try {
-    const res = await fetch(`/api/available?barberId=${barberId}&date=${date}`);
+    const res = await fetch(`${API_URL}/api/available?barberId=${barberId}&date=${date}`);
     const data = await res.json();
 
     if (!data.worksToday) {
@@ -495,7 +495,7 @@ async function submitEdit() {
   btn.innerHTML = '<span class="spinner"></span>';
 
   try {
-    const res = await fetch(`/api/appointments/${state.currentAppt.code}`, {
+    const res = await fetch(`${API_URL}/api/appointments/${state.currentAppt.code}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ barberId, service, date, time }),
