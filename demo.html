@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ManHaus Barber — Demo</title>
+<meta name="description" content="ManHaus Barber – Reserva tu cita online"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+<style>
+/* ══════════════════════════════════════════════
+   RESET & VARIABLES
+══════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --gold:#C9A84C;--gold-l:#E4C876;--gold-d:#9A7A2E;
+  --black:#0A0A0A;--dark:#111111;--card:#161616;--card2:#1C1C1C;
+  --border:#2A2A2A;--border2:#333333;
+  --text:#F5F5F0;--muted:#888888;--dim:#555555;
+  --ok:#4CAF50;--err:#E53935;--warn:#FF9800;
+}
+body{font-family:'Inter',sans-serif;background:var(--black);color:var(--text);min-height:100vh;line-height:1.6;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--gold-d);border-radius:3px}
+a{text-decoration:none;color:inherit}
+
+/* ══ NOISE ══════════════════════════════════ */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4}
+
+/* ══ NAVBAR ═════════════════════════════════ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,.93);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);height:68px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:11px}
+.nav-logo-ico{width:40px;height:40px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0}
+.nav-logo-txt{font-family:'Bebas Neue',sans-serif;font-size:1.45rem;letter-spacing:2px}
+.nav-logo-txt span{color:var(--gold)}
+.nav-links{display:flex;gap:.4rem;align-items:center}
+.nb{padding:7px 16px;border-radius:6px;font-size:.84rem;font-weight:500;cursor:pointer;transition:all .2s;border:1px solid transparent;background:transparent;color:var(--muted);border-color:var(--border2)}
+.nb:hover{color:var(--gold);border-color:var(--gold)}
+.nb-gold{background:var(--gold);color:var(--black);font-weight:600;border-color:var(--gold)}
+.nb-gold:hover{background:var(--gold-l)}
+@media(max-width:600px){.nb:not(.nb-gold){display:none}}
+
+/* ══ HERO ════════════════════════════════════ */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 1.5rem 70px;position:relative;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(201,168,76,.13) 0%,transparent 60%),var(--black)}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 16px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);border-radius:100px;font-size:.72rem;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:1.5rem}
+.hero-logo{width:100px;height:100px;margin:0 auto 1.5rem;background:var(--card);border:2.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.8rem;box-shadow:0 0 48px rgba(201,168,76,.28)}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,10vw,7.5rem);line-height:1;letter-spacing:4px;margin-bottom:.4rem}
+.hero h1 span{color:var(--gold)}
+.hero-sub{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(.95rem,2.5vw,1.25rem);color:var(--muted);margin-bottom:2.5rem}
+.hero-cta{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 30px;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .25s;border:none;font-family:'Inter',sans-serif}
+.btn-g{background:var(--gold);color:var(--black);box-shadow:0 4px 24px rgba(201,168,76,.33)}
+.btn-g:hover{background:var(--gold-l);transform:translateY(-2px);box-shadow:0 8px 32px rgba(201,168,76,.42)}
+.btn-o{background:transparent;color:var(--text);border:1px solid var(--border2)}
+.btn-o:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+.btn-d{background:transparent;color:var(--err);border:1px solid rgba(229,57,53,.4)}
+.btn-d:hover{background:rgba(229,57,53,.08);border-color:var(--err)}
+.btn-w{background:transparent;color:var(--warn);border:1px solid rgba(255,152,0,.4)}
+.btn-w:hover{background:rgba(255,152,0,.08);border-color:var(--warn)}
+.hero-stats{display:flex;gap:3rem;margin-top:3.5rem;padding-top:2rem;border-top:1px solid var(--border)}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:2.3rem;color:var(--gold);line-height:1}
+.stat-lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:.15rem}
+.scroll-ind{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--dim);font-size:.68rem;letter-spacing:2px;text-transform:uppercase;animation:bob 2.2s infinite}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+/* ══ SECTIONS ════════════════════════════════ */
+section{padding:80px 1.5rem;position:relative;z-index:1}
+.container{max-width:1100px;margin:0 auto}
+.sec-hd{text-align:center;margin-bottom:3rem}
+.sec-lbl{font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.4rem}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;margin-bottom:.6rem}
+.sec-title span{color:var(--gold)}
+.sec-desc{color:var(--muted);max-width:520px;margin:.6rem auto 0;font-size:.95rem}
+.gold-line{width:56px;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent);margin:.9rem auto 0}
+
+/* ══ SERVICES ════════════════════════════════ */
+#servicios{background:var(--dark)}
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1.2rem}
+.svc-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.75rem 1.4rem;text-align:center;transition:all .25s;cursor:default;position:relative;overflow:hidden}
+.svc-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,168,76,.07),transparent);opacity:0;transition:opacity .25s}
+.svc-card:hover{border-color:var(--gold);transform:translateY(-4px)}
+.svc-card:hover::before{opacity:1}
+.svc-ico{font-size:2rem;margin-bottom:.9rem;display:block}
+.svc-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;margin-bottom:.35rem}
+.svc-dur{font-size:.75rem;color:var(--muted);margin-bottom:.7rem}
+.svc-price{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--gold);letter-spacing:1px}
+
+/* ══ BARBERS ═════════════════════════════════ */
+#barberos{background:var(--black)}
+.brb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.4rem;max-width:680px;margin:0 auto}
+.brb-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2.5rem 2rem;text-align:center;position:relative;overflow:hidden}
+.brb-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(to right,transparent,var(--gold),transparent)}
+.brb-ava{width:88px;height:88px;background:linear-gradient(135deg,var(--gold-d),var(--gold));border-radius:50%;margin:0 auto 1.2rem;display:flex;align-items:center;justify-content:center;font-size:2.4rem;border:3px solid var(--border2)}
+.brb-name{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;margin-bottom:.2rem}
+.brb-title{color:var(--gold);font-size:.75rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.2rem}
+.brb-sched{background:var(--card2);border-radius:10px;padding:.9rem 1.15rem;font-size:.84rem;color:var(--muted)}
+.brb-sched strong{color:var(--text);display:block;margin-bottom:.2rem}
+
+/* ══ BOOKING ═════════════════════════════════ */
+#agendar{background:var(--dark)}
+.bk-wrap{max-width:660px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.55)}
+.bk-head{background:linear-gradient(135deg,var(--gold-d) 0%,var(--gold) 100%);padding:1.9rem 2.5rem;text-align:center}
+.bk-head h2{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--black);letter-spacing:3px;margin-bottom:.2rem}
+.bk-head p{font-size:.84rem;color:rgba(10,10,10,.68)}
+.bk-body{padding:2.5rem}
+
+/* Steps */
+.steps{display:flex;justify-content:center;align-items:center;margin-bottom:2.5rem}
+.step-it{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;position:relative}
+.step-it:not(:last-child)::after{content:'';position:absolute;top:14px;left:calc(50% + 14px);right:calc(-50% + 14px);height:1px;background:var(--border2);transition:background .3s}
+.step-it.done:not(:last-child)::after,.step-it.active:not(:last-child)::after{background:var(--gold)}
+.step-ci{width:28px;height:28px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.73rem;font-weight:600;color:var(--dim);transition:all .3s;background:var(--card);position:relative;z-index:1}
+.step-it.active .step-ci{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.1);box-shadow:0 0 14px rgba(201,168,76,.28)}
+.step-it.done .step-ci{border-color:var(--gold);background:var(--gold);color:var(--black)}
+.step-lb{font-size:.62rem;color:var(--dim);text-transform:uppercase;letter-spacing:.8px}
+.step-it.active .step-lb{color:var(--gold)}.step-it.done .step-lb{color:var(--muted)}
+
+/* Panel */
+.panel{display:none}
+.panel.on{display:block;animation:fi .3s ease}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Form */
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.fg{margin-bottom:1.2rem}
+.fl{display:block;font-size:.75rem;font-weight:500;color:var(--muted);margin-bottom:.45rem;text-transform:uppercase;letter-spacing:.4px}
+.fl .req{color:var(--gold);margin-left:2px}
+.fc{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:11px 15px;color:var(--text);font-size:.93rem;font-family:'Inter',sans-serif;transition:border-color .2s;outline:none;appearance:none}
+.fc:focus{border-color:var(--gold)}
+.fc::placeholder{color:var(--dim)}
+select.fc{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' fill='none' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23888' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:38px}
+
+/* Barber options */
+.brb-opts{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.brb-opt{background:var(--card2);border:2px solid var(--border);border-radius:10px;padding:1.2rem 1rem;text-align:center;cursor:pointer;transition:all .2s}
+.brb-opt:hover{border-color:var(--border2)}
+.brb-opt.sel{border-color:var(--gold);background:rgba(201,168,76,.07)}
+.brb-opt-ava{font-size:1.75rem;margin-bottom:.45rem}
+.brb-opt-name{font-weight:600;font-size:.88rem;margin-bottom:.2rem}
+.brb-opt-days{font-size:.7rem;color:var(--muted)}
+
+/* Slots */
+.slots-g{display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem;margin-top:.5rem}
+.slot{background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:7px 3px;color:var(--text);font-size:.8rem;cursor:pointer;transition:all .2s;text-align:center;font-family:'Inter',sans-serif}
+.slot:hover{border-color:var(--gold);color:var(--gold)}
+.slot.sel{background:var(--gold);color:var(--black);font-weight:600;border-color:var(--gold)}
+.slot.busy{opacity:.28;cursor:not-allowed;pointer-events:none;text-decoration:line-through}
+.slots-empty{text-align:center;color:var(--muted);padding:1.25rem;font-size:.88rem;grid-column:1/-1}
+
+/* Summary */
+.summ{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:1.4rem;margin-bottom:1.4rem}
+.sr{display:flex;justify-content:space-between;align-items:center;padding:.55rem 0;border-bottom:1px solid var(--border);font-size:.88rem}
+.sr:last-child{border-bottom:none}
+.sl{color:var(--muted)}
+.sv{font-weight:500}
+.sv.gold{color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px}
+
+/* Nav buttons */
+.fnav{display:flex;justify-content:space-between;align-items:center;margin-top:1.4rem;gap:.9rem}
+.fnav .btn{flex:1}
+
+/* Confirmation */
+.conf{text-align:center;padding:.5rem 0}
+.conf-ico{width:78px;height:78px;background:rgba(76,175,80,.13);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:0 auto 1.4rem;border:2px solid rgba(76,175,80,.35)}
+.conf h3{font-family:'Playfair Display',serif;font-size:1.55rem;margin-bottom:.45rem}
+.conf p{color:var(--muted);font-size:.93rem;margin-bottom:1.4rem}
+.code-box{background:var(--card2);border:2px dashed var(--gold);border-radius:12px;padding:1.4rem;margin:1.4rem 0}
+.code-lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:.4rem}
+.code-val{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--gold);letter-spacing:8px;line-height:1}
+.code-note{font-size:.76rem;color:var(--muted);margin-top:.65rem;display:flex;align-items:center;justify-content:center;gap:5px}
+.conf-btns{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-top:1rem}
+
+/* ══ MANAGE ══════════════════════════════════ */
+#gestionar{background:var(--black)}
+.mg-wrap{max-width:580px;margin:0 auto}
+.mg-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2.25rem;margin-bottom:1.4rem}
+.mg-card h3{font-family:'Playfair Display',serif;font-size:1.25rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:.65rem}
+.mg-card h3 em{color:var(--gold);font-style:normal;font-size:1.35rem}
+.search-row{display:flex;gap:.75rem;align-items:flex-end}
+.search-row .fc{text-transform:uppercase;letter-spacing:2px;flex:1}
+.appt-det{display:none}
+.appt-det.vis{display:block;animation:fi .3s ease}
+.appt-info{background:var(--card2);border-radius:10px;padding:1.15rem;margin:1.2rem 0}
+.ar{display:flex;justify-content:space-between;padding:.48rem 0;font-size:.88rem;border-bottom:1px solid var(--border)}
+.ar:last-child{border-bottom:none}
+.ar label{color:var(--muted)}
+.ar span{font-weight:500}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 11px;border-radius:100px;font-size:.72rem;font-weight:600}
+.badge.ok{background:rgba(76,175,80,.13);color:var(--ok);border:1px solid rgba(76,175,80,.28)}
+.badge.err{background:rgba(229,57,53,.13);color:var(--err);border:1px solid rgba(229,57,53,.28)}
+.mg-acts{display:flex;gap:.7rem;margin-top:1rem}
+.mg-acts .btn{flex:1;font-size:.88rem;padding:11px}
+.warn-note{margin-top:.75rem;padding:.7rem 1rem;background:rgba(255,152,0,.07);border:1px solid rgba(255,152,0,.2);border-radius:8px;font-size:.78rem;color:var(--warn)}
+
+/* ══ MODAL ═══════════════════════════════════ */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(7px);z-index:200;align-items:center;justify-content:center;padding:1.5rem}
+.overlay.open{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;width:100%;max-width:460px;max-height:88vh;overflow-y:auto;animation:fi .2s ease}
+.mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.4rem}
+.mt{font-family:'Playfair Display',serif;font-size:1.25rem}
+.mc{width:30px;height:30px;background:var(--card2);border:none;border-radius:6px;color:var(--muted);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.mc:hover{background:var(--border);color:var(--text)}
+.m-btns{display:flex;gap:.75rem;margin-top:1.2rem}
+.m-btns .btn{flex:1}
+
+/* ══ TOAST ═══════════════════════════════════ */
+#toasts{position:fixed;bottom:1.75rem;right:1.75rem;z-index:300;display:flex;flex-direction:column;gap:.7rem}
+.toast{display:flex;align-items:flex-start;gap:.7rem;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.9rem 1.15rem;min-width:270px;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:tin .28s ease}
+@keyframes tin{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+.toast.out{animation:tout .28s ease forwards}
+@keyframes tout{to{transform:translateX(120%);opacity:0}}
+.toast.ok{border-left:3px solid var(--ok)}.toast.err{border-left:3px solid var(--err)}.toast.info{border-left:3px solid var(--gold)}
+.ti{font-size:1.1rem;flex-shrink:0;margin-top:1px}
+.tt{font-weight:600;font-size:.88rem;margin-bottom:1px}
+.tm{font-size:.8rem;color:var(--muted)}
+
+/* ══ SPINNER ═════════════════════════════════ */
+.spin{width:18px;height:18px;border:2px solid rgba(10,10,10,.25);border-top-color:var(--black);border-radius:50%;animation:sp .55s linear infinite;display:inline-block;vertical-align:middle}
+.spin-g{border-color:rgba(201,168,76,.2);border-top-color:var(--gold)}
+
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ══ FOOTER ══════════════════════════════════ */
+footer{background:var(--dark);border-top:1px solid var(--border);padding:3rem 1.5rem;text-align:center}
+.ft-logo{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:3px;margin-bottom:.4rem}
+.ft-logo span{color:var(--gold)}
+.ft-tag{font-family:'Playfair Display',serif;font-style:italic;color:var(--muted);margin-bottom:1.4rem}
+.ft-links{display:flex;gap:1.4rem;justify-content:center;margin-bottom:1.75rem;flex-wrap:wrap}
+.ft-links a{color:var(--muted);font-size:.84rem;transition:color .2s}
+.ft-links a:hover{color:var(--gold)}
+.ft-copy{font-size:.73rem;color:var(--dim)}
+.demo-banner{position:fixed;bottom:0;left:0;right:0;background:rgba(201,168,76,.95);color:var(--black);text-align:center;padding:.5rem 1rem;font-size:.78rem;font-weight:600;z-index:400;letter-spacing:.5px}
+
+/* ══ RESPONSIVE ══════════════════════════════ */
+@media(max-width:580px){
+  .frow{grid-template-columns:1fr}
+  .slots-g{grid-template-columns:repeat(3,1fr)}
+  .brb-opts{grid-template-columns:1fr}
+  .fnav,.mg-acts,.m-btns,.conf-btns{flex-direction:column}
+  .bk-body{padding:1.4rem}
+  .mg-card{padding:1.4rem}
+  .hero-stats{gap:1.5rem}
+  #toasts{left:.75rem;right:.75rem;bottom:.75rem}
+  .toast{min-width:unset;max-width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- DEMO BANNER -->
+<div class="demo-banner">✦ DEMO VISUAL — ManHaus Barber · Sin conexión a base de datos ✦</div>
+
+<!-- ══ NAV ════════════════════════════════════════ -->
+<nav class="nav">
+  <a href="#inicio" class="nav-logo" onclick="goTo('#inicio')">
+    <div class="nav-logo-ico">✂️</div>
+    <span class="nav-logo-txt">MAN<span>HAUS</span></span>
+  </a>
+  <div class="nav-links">
+    <button class="nb" onclick="goTo('#servicios')">Servicios</button>
+    <button class="nb" onclick="goTo('#barberos')">Barberos</button>
+    <button class="nb" onclick="goTo('#gestionar')">Mi Cita</button>
+    <button class="nb nb-gold" onclick="goTo('#agendar')">Agendar →</button>
+  </div>
+</nav>
+
+<!-- ══ HERO ══════════════════════════════════════ -->
+<section class="hero" id="inicio">
+  <span class="hero-badge">✦ Barbería Premium ✦</span>
+  <div class="hero-logo">✂️</div>
+  <h1>MAN<span>HAUS</span><br>BARBER</h1>
+  <p class="hero-sub">El arte del corte perfecto, a tu medida</p>
+  <div class="hero-cta">
+    <button class="btn btn-g" onclick="goTo('#agendar')">Reservar Cita</button>
+    <button class="btn btn-o" onclick="goTo('#gestionar')">Gestionar Cita</button>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="stat-num">2</div>
+      <div class="stat-lbl">Barberos Expertos</div>
+    </div>
+    <div>
+      <div class="stat-num">9–7</div>
+      <div class="stat-lbl">Horario</div>
+    </div>
+    <div>
+      <div class="stat-num">5★</div>
+      <div class="stat-lbl">Calidad</div>
+    </div>
+  </div>
+  <div class="scroll-ind">
+    <svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    <span>Explorar</span>
+  </div>
+</section>
+
+<!-- ══ SERVICIOS ══════════════════════════════════ -->
+<section id="servicios">
+  <div class="container">
+    <div class="sec-hd">
+      <span class="sec-lbl">Lo que ofrecemos</span>
+      <h2 class="sec-title">Nuestros <span>Servicios</span></h2>
+      <div class="gold-line"></div>
+      <p class="sec-desc">Cada servicio es una experiencia. Trabajo artesanal con los mejores productos.</p>
+    </div>
+    <div class="svc-grid">
+      <div class="svc-card"><span class="svc-ico">💈</span><div class="svc-name">Corte de Cabello</div><div class="svc-dur">⏱ 30 min</div><div class="svc-price">₡5.000</div></div>
+      <div class="svc-card"><span class="svc-ico">🪒</span><div class="svc-name">Arreglo de Barba</div><div class="svc-dur">⏱ 30 min</div><div class="svc-price">₡3.500</div></div>
+      <div class="svc-card"><span class="svc-ico">⭐</span><div class="svc-name">Corte + Barba</div><div class="svc-dur">⏱ 60 min</div><div class="svc-price">₡7.500</div></div>
+      <div class="svc-card"><span class="svc-ico">✨</span><div class="svc-name">Afeitado a Navaja</div><div class="svc-dur">⏱ 45 min</div><div class="svc-price">₡4.500</div></div>
+      <div class="svc-card"><span class="svc-ico">🧒</span><div class="svc-name">Corte Niño</div><div class="svc-dur">⏱ 30 min</div><div class="svc-price">₡3.500</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BARBEROS ═══════════════════════════════════ -->
+<section id="barberos">
+  <div class="container">
+    <div class="sec-hd">
+      <span class="sec-lbl">El equipo</span>
+      <h2 class="sec-title">Nuestros <span>Barberos</span></h2>
+      <div class="gold-line"></div>
+    </div>
+    <div class="brb-grid">
+      <div class="brb-card">
+        <div class="brb-ava">💈</div>
+        <div class="brb-name">Barbero 1</div>
+        <div class="brb-title">Maestro Barbero</div>
+        <div class="brb-sched"><strong>📅 Lunes a Sábado</strong>🕘 9:00 AM — 7:00 PM</div>
+      </div>
+      <div class="brb-card">
+        <div class="brb-ava">✂️</div>
+        <div class="brb-name">Barbero 2</div>
+        <div class="brb-title">Maestro Barbero</div>
+        <div class="brb-sched"><strong>📅 Todos los días</strong>🕘 9:00 AM — 7:00 PM</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ AGENDAR ════════════════════════════════════ -->
+<section id="agendar">
+  <div class="container">
+    <div class="sec-hd">
+      <span class="sec-lbl">Reservación</span>
+      <h2 class="sec-title">Agenda tu <span>Cita</span></h2>
+      <div class="gold-line"></div>
+    </div>
+    <div class="bk-wrap">
+      <div class="bk-head">
+        <h2>NUEVA CITA</h2>
+        <p>Reserva en segundos, llega con estilo</p>
+      </div>
+      <div class="bk-body">
+
+        <!-- Steps indicator -->
+        <div class="steps">
+          <div class="step-it active" id="si1"><div class="step-ci">1</div><div class="step-lb">Servicio</div></div>
+          <div class="step-it" id="si2"><div class="step-ci">2</div><div class="step-lb">Fecha</div></div>
+          <div class="step-it" id="si3"><div class="step-ci">3</div><div class="step-lb">Datos</div></div>
+          <div class="step-it" id="si4"><div class="step-ci">4</div><div class="step-lb">Confirmar</div></div>
+        </div>
+
+        <!-- PASO 1 -->
+        <div class="panel on" id="p1">
+          <div class="fg">
+            <label class="fl">Elige tu Servicio <span class="req">*</span></label>
+            <select class="fc" id="s-svc">
+              <option value="">— Seleccionar —</option>
+              <option value="corte">Corte de Cabello — ₡5.000 (30 min)</option>
+              <option value="barba">Arreglo de Barba — ₡3.500 (30 min)</option>
+              <option value="combo">Corte + Barba — ₡7.500 (60 min)</option>
+              <option value="navaja">Afeitado a Navaja — ₡4.500 (45 min)</option>
+              <option value="nino">Corte Niño — ₡3.500 (30 min)</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label class="fl">Elige tu Barbero <span class="req">*</span></label>
+            <div class="brb-opts">
+              <div class="brb-opt" id="bo1" onclick="selBarber(1)">
+                <div class="brb-opt-ava">💈</div>
+                <div class="brb-opt-name">Barbero 1</div>
+                <div class="brb-opt-days">Lun — Sáb</div>
+              </div>
+              <div class="brb-opt" id="bo2" onclick="selBarber(2)">
+                <div class="brb-opt-ava">✂️</div>
+                <div class="brb-opt-name">Barbero 2</div>
+                <div class="brb-opt-days">Todos los días</div>
+              </div>
+            </div>
+          </div>
+          <div class="fnav"><button class="btn btn-g" onclick="go(2)" style="margin-left:auto">Siguiente →</button></div>
+        </div>
+
+        <!-- PASO 2 -->
+        <div class="panel" id="p2">
+          <div class="frow">
+            <div class="fg">
+              <label class="fl" for="s-date">Fecha <span class="req">*</span></label>
+              <input type="date" class="fc" id="s-date" onchange="loadSlots()"/>
+            </div>
+            <div class="fg">
+              <label class="fl">Horario disponible <span class="req">*</span></label>
+              <div id="slots-area"><p style="color:var(--dim);font-size:.82rem;padding:.5rem 0">Selecciona una fecha primero</p></div>
+            </div>
+          </div>
+          <div class="fnav">
+            <button class="btn btn-o" onclick="go(1)">← Atrás</button>
+            <button class="btn btn-g" onclick="go(3)">Siguiente →</button>
+          </div>
+        </div>
+
+        <!-- PASO 3 -->
+        <div class="panel" id="p3">
+          <div class="frow">
+            <div class="fg">
+              <label class="fl" for="s-name">Nombre completo <span class="req">*</span></label>
+              <input type="text" class="fc" id="s-name" placeholder="Tu nombre completo"/>
+            </div>
+            <div class="fg">
+              <label class="fl" for="s-phone">Teléfono <span class="req">*</span></label>
+              <input type="tel" class="fc" id="s-phone" placeholder="55 1234 5678"/>
+            </div>
+          </div>
+          <div class="fg">
+            <label class="fl" for="s-email">Email (opcional)</label>
+            <input type="email" class="fc" id="s-email" placeholder="tucorreo@email.com"/>
+          </div>
+          <div class="fnav">
+            <button class="btn btn-o" onclick="go(2)">← Atrás</button>
+            <button class="btn btn-g" onclick="go(4)">Siguiente →</button>
+          </div>
+        </div>
+
+        <!-- PASO 4 -->
+        <div class="panel" id="p4">
+          <div class="summ" id="summ-box"></div>
+          <div class="fnav">
+            <button class="btn btn-o" onclick="go(3)">← Atrás</button>
+            <button class="btn btn-g" id="btn-conf" onclick="confirm()">Confirmar Cita ✓</button>
+          </div>
+        </div>
+
+        <!-- PASO 5: Éxito -->
+        <div class="panel" id="p5">
+          <div class="conf">
+            <div class="conf-ico">✅</div>
+            <h3>¡Cita Confirmada!</h3>
+            <p>Tu cita ha sido agendada exitosamente.<br>Guarda tu código para gestionar tu cita.</p>
+            <div class="code-box">
+              <div class="code-lbl">Tu código único</div>
+              <div class="code-val" id="conf-code">—</div>
+              <div class="code-note">⚠️ Necesitas este código para modificar o cancelar</div>
+            </div>
+            <div id="conf-det"></div>
+            <div class="conf-btns">
+              <button class="btn btn-o" onclick="copyCode()">📋 Copiar Código</button>
+              <button class="btn btn-g" onclick="resetForm()">Nueva Cita</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ GESTIONAR ══════════════════════════════════ -->
+<section id="gestionar">
+  <div class="container">
+    <div class="sec-hd">
+      <span class="sec-lbl">Tu reservación</span>
+      <h2 class="sec-title">Gestionar <span>Cita</span></h2>
+      <div class="gold-line"></div>
+      <p class="sec-desc">Ingresa tu código único para modificar o cancelar tu cita.</p>
+    </div>
+    <div class="mg-wrap">
+      <div class="mg-card">
+        <h3><em>🔑</em> Buscar mi cita</h3>
+        <div class="search-row">
+          <input type="text" class="fc" id="mg-code" placeholder="Ej: MH3X9AB2" maxlength="8"
+            onkeydown="if(event.key==='Enter')search()" oninput="this.value=this.value.toUpperCase()"/>
+          <button class="btn btn-g" onclick="search()" style="white-space:nowrap;padding:11px 20px">Buscar</button>
+        </div>
+        <div class="appt-det" id="appt-det">
+          <div class="appt-info" id="appt-info"></div>
+          <div class="mg-acts" id="mg-acts"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ═════════════════════════════════════ -->
+<footer>
+  <div class="ft-logo">MAN<span>HAUS</span> BARBER</div>
+  <div class="ft-tag">El arte del corte perfecto</div>
+  <div class="ft-links">
+    <a onclick="goTo('#inicio')">Inicio</a>
+    <a onclick="goTo('#servicios')">Servicios</a>
+    <a onclick="goTo('#barberos')">Barberos</a>
+    <a onclick="goTo('#agendar')">Agendar</a>
+    <a onclick="goTo('#gestionar')">Mi Cita</a>
+  </div>
+  <div class="ft-copy">© 2024 ManHaus Barber. Todos los derechos reservados.</div>
+</footer>
+
+<!-- ══ MODAL: Modificar ═══════════════════════════ -->
+<div class="overlay" id="modal-edit">
+  <div class="modal">
+    <div class="mh">
+      <h3 class="mt">✏️ Modificar Cita</h3>
+      <button class="mc" onclick="closeModal()">✕</button>
+    </div>
+    <div class="fg">
+      <label class="fl">Servicio</label>
+      <select class="fc" id="e-svc">
+        <option value="corte">Corte de Cabello — ₡5.000</option>
+        <option value="barba">Arreglo de Barba — ₡3.500</option>
+        <option value="combo">Corte + Barba — ₡7.500</option>
+        <option value="navaja">Afeitado a Navaja — ₡4.500</option>
+        <option value="nino">Corte Niño — ₡3.500</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label class="fl">Barbero</label>
+      <select class="fc" id="e-barber" onchange="loadEditSlots()">
+        <option value="1">Barbero 1 (Lun–Sáb)</option>
+        <option value="2">Barbero 2 (Todos los días)</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label class="fl">Nueva Fecha</label>
+      <input type="date" class="fc" id="e-date" onchange="loadEditSlots()"/>
+    </div>
+    <div class="fg">
+      <label class="fl">Nuevo Horario</label>
+      <div id="e-slots"></div>
+    </div>
+    <div class="m-btns">
+      <button class="btn btn-o" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-g" id="btn-save" onclick="saveEdit()">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOASTS ═════════════════════════════════════ -->
+<div id="toasts"></div>
+
+<script>
+/* ════════════════════════════════════════════
+   DEMO DATA & STATE
+════════════════════════════════════════════ */
+const SVCS = {
+  corte: 'Corte de Cabello',
+  barba: 'Arreglo de Barba',
+  combo: 'Corte + Barba',
+  navaja: 'Afeitado a Navaja',
+  nino: 'Corte Niño',
+};
+
+const DAYS  = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const MONTHS= ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+// Demo: pre-booked slots to simulate real availability
+const MOCK_BUSY = {
+  1: { /* barberId 1 */ },
+  2: { /* barberId 2 */ },
+};
+
+// Simulated DB (in-memory for demo)
+const DB = [];
+
+const S = {
+  step: 1, barberId: null, svc: null,
+  date: null, time: null,
+  name: null, phone: null, email: null,
+  appt: null, editTime: null,
+};
+
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function fmtDate(d) {
+  const [y,m,dd] = d.split('-').map(Number);
+  const dt = new Date(y, m-1, dd);
+  return `${DAYS[dt.getDay()]} ${dd} de ${MONTHS[m-1]} ${y}`;
+}
+
+function genCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  return Array.from({length:8}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+}
+
+function barberWorks(id, dateStr) {
+  const [y,m,d] = dateStr.split('-').map(Number);
+  const day = new Date(y, m-1, d).getDay();
+  return id === 1 ? (day >= 1 && day <= 6) : true;
+}
+
+function allSlots() {
+  const s = [];
+  for (let h = 9; h < 19; h++)
+    for (let m = 0; m < 60; m += 30) {
+      if (h === 18 && m >= 30) break;
+      s.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
+    }
+  return s;
+}
+
+function getBusy(barberId, date) {
+  // From in-memory DB
+  return DB
+    .filter(a => a.barberId === barberId && a.date === date && a.status === 'confirmed')
+    .map(a => a.time);
+}
+
+/* ════════════════════════════════════════════
+   TOAST
+════════════════════════════════════════════ */
+function toast(type, title, msg) {
+  const ico = { ok:'✅', err:'❌', info:'ℹ️' };
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span class="ti">${ico[type]||'ℹ️'}</span><div><div class="tt">${title}</div>${msg?`<div class="tm">${msg}</div>`:''}</div>`;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 300); }, 4000);
+}
+
+/* ════════════════════════════════════════════
+   SCROLL
+════════════════════════════════════════════ */
+function goTo(id) {
+  document.querySelector(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ════════════════════════════════════════════
+   STEPS
+════════════════════════════════════════════ */
+function setStep(n) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  document.getElementById(`p${n}`).classList.add('on');
+  for (let i = 1; i <= 4; i++) {
+    const it = document.getElementById(`si${i}`);
+    if (!it) continue;
+    it.classList.remove('active','done');
+    const ci = it.querySelector('.step-ci');
+    if (i < n) { it.classList.add('done'); ci.textContent = '✓'; }
+    else if (i === n) { it.classList.add('active'); ci.textContent = i; }
+    else ci.textContent = i;
+  }
+  S.step = n;
+  if (n > 1 && n < 5) document.getElementById('agendar').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function go(n) {
+  if (n > S.step && !validate(S.step)) return;
+  if (n === 4) buildSummary();
+  setStep(n);
+}
+
+function validate(s) {
+  if (s === 1) {
+    if (!document.getElementById('s-svc').value) { toast('err','Servicio requerido','Selecciona un servicio.'); return false; }
+    if (!S.barberId) { toast('err','Barbero requerido','Elige un barbero.'); return false; }
+  }
+  if (s === 2) {
+    if (!S.date) { toast('err','Fecha requerida','Selecciona una fecha.'); return false; }
+    if (!S.time) { toast('err','Horario requerido','Selecciona un horario disponible.'); return false; }
+  }
+  if (s === 3) {
+    const n = document.getElementById('s-name').value.trim();
+    const p = document.getElementById('s-phone').value.trim();
+    if (!n) { toast('err','Nombre requerido','Ingresa tu nombre.'); return false; }
+    if (!p) { toast('err','Teléfono requerido','Ingresa tu teléfono.'); return false; }
+    S.name = n; S.phone = p; S.email = document.getElementById('s-email').value.trim();
+  }
+  return true;
+}
+
+/* ════════════════════════════════════════════
+   BARBER SELECT
+════════════════════════════════════════════ */
+function selBarber(id) {
+  S.barberId = id;
+  document.getElementById('bo1').classList.toggle('sel', id === 1);
+  document.getElementById('bo2').classList.toggle('sel', id === 2);
+  S.date = null; S.time = null;
+  document.getElementById('s-date').value = '';
+  document.getElementById('slots-area').innerHTML = '<p style="color:var(--dim);font-size:.82rem;padding:.5rem 0">Selecciona una fecha</p>';
+}
+
+/* ════════════════════════════════════════════
+   SLOTS
+════════════════════════════════════════════ */
+function loadSlots() {
+  const dateVal = document.getElementById('s-date').value;
+  if (!dateVal) return;
+  if (!S.barberId) { toast('info','Primero elige barbero','Vuelve al paso 1.'); return; }
+  S.date = dateVal; S.time = null;
+  const area = document.getElementById('slots-area');
+
+  if (!barberWorks(S.barberId, dateVal)) {
+    area.innerHTML = `<div class="slots-empty" style="font-size:.8rem">🚫 El barbero no trabaja este día.<br><small style="color:var(--dim)">Barbero 1: Lun–Sáb · Barbero 2: Todos los días</small></div>`;
+    return;
+  }
+
+  // Simulate some busy slots for demo realism
+  const busy = getBusy(S.barberId, dateVal);
+  // Add a few demo-busy slots on certain dates to look realistic
+  const demoBusy = ['09:00','09:30','11:00','14:00','16:30'];
+  const allBusy = [...new Set([...busy, ...demoBusy])];
+
+  const avail = allSlots().filter(s => !allBusy.includes(s));
+  if (!avail.length) {
+    area.innerHTML = `<div class="slots-empty">😔 No hay horarios disponibles.</div>`;
+    return;
+  }
+
+  const grid = document.createElement('div');
+  grid.className = 'slots-g';
+  allSlots().forEach(slot => {
+    const btn = document.createElement('button');
+    const isBusy = allBusy.includes(slot);
+    btn.className = 'slot' + (isBusy ? ' busy' : '');
+    btn.textContent = slot;
+    if (!isBusy) btn.onclick = () => pickSlot(slot, grid);
+    grid.appendChild(btn);
+  });
+  area.innerHTML = '';
+  area.appendChild(grid);
+}
+
+function pickSlot(time, grid) {
+  S.time = time;
+  grid.querySelectorAll('.slot').forEach(b => b.classList.remove('sel'));
+  [...grid.querySelectorAll('.slot')].find(b => b.textContent === time)?.classList.add('sel');
+}
+
+/* ════════════════════════════════════════════
+   SUMMARY
+════════════════════════════════════════════ */
+function buildSummary() {
+  const svc = SVCS[document.getElementById('s-svc').value] || '—';
+  const brb = S.barberId === 1 ? 'Barbero 1 (Lun–Sáb)' : 'Barbero 2 (Todos los días)';
+  document.getElementById('summ-box').innerHTML = `
+    <div class="sr"><span class="sl">Servicio</span><span class="sv">${svc}</span></div>
+    <div class="sr"><span class="sl">Barbero</span><span class="sv">${brb}</span></div>
+    <div class="sr"><span class="sl">Fecha</span><span class="sv">${fmtDate(S.date)}</span></div>
+    <div class="sr"><span class="sl">Horario</span><span class="sv gold">${S.time}</span></div>
+    <div class="sr"><span class="sl">Cliente</span><span class="sv">${S.name}</span></div>
+    <div class="sr"><span class="sl">Teléfono</span><span class="sv">${S.phone}</span></div>`;
+}
+
+/* ════════════════════════════════════════════
+   CONFIRM (DEMO — no API)
+════════════════════════════════════════════ */
+function confirm() {
+  const btn = document.getElementById('btn-conf');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Procesando...';
+
+  // Simulate API delay
+  setTimeout(() => {
+    const code = genCode();
+    const appt = {
+      code, status: 'confirmed',
+      clientName: S.name, clientPhone: S.phone, clientEmail: S.email,
+      barberId: S.barberId, service: document.getElementById('s-svc').value,
+      date: S.date, time: S.time,
+    };
+    DB.push(appt);
+    S.appt = appt;
+
+    document.getElementById('conf-code').textContent = code;
+    document.getElementById('conf-det').innerHTML = `
+      <div class="summ">
+        <div class="sr"><span class="sl">Servicio</span><span class="sv">${SVCS[appt.service]}</span></div>
+        <div class="sr"><span class="sl">Barbero</span><span class="sv">${appt.barberId===1?'Barbero 1':'Barbero 2'}</span></div>
+        <div class="sr"><span class="sl">Fecha</span><span class="sv">${fmtDate(appt.date)}</span></div>
+        <div class="sr"><span class="sl">Hora</span><span class="sv gold">${appt.time}</span></div>
+      </div>`;
+
+    setStep(5);
+    toast('ok','¡Cita confirmada!',`Código: ${code}`);
+    btn.disabled = false;
+    btn.innerHTML = 'Confirmar Cita ✓';
+  }, 1200);
+}
+
+function copyCode() {
+  const code = document.getElementById('conf-code').textContent;
+  navigator.clipboard?.writeText(code).then(() => toast('ok','¡Copiado!',`Código ${code} al portapapeles.`))
+    .catch(() => toast('info','Código',code));
+}
+
+function resetForm() {
+  S.barberId=null; S.svc=null; S.date=null; S.time=null;
+  S.name=null; S.phone=null; S.email=null;
+  ['s-svc','s-date','s-name','s-phone','s-email'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.querySelectorAll('.brb-opt').forEach(e => e.classList.remove('sel'));
+  document.getElementById('slots-area').innerHTML = '<p style="color:var(--dim);font-size:.82rem;padding:.5rem 0">Selecciona una fecha primero</p>';
+  for (let i=1;i<=4;i++){
+    const it=document.getElementById(`si${i}`);
+    if(it){it.classList.remove('active','done');it.querySelector('.step-ci').textContent=i;}
+  }
+  setStep(1);
+  goTo('#agendar');
+}
+
+/* ════════════════════════════════════════════
+   MANAGE (DEMO)
+════════════════════════════════════════════ */
+function search() {
+  const code = document.getElementById('mg-code').value.trim().toUpperCase();
+  if (!code || code.length < 6) { toast('err','Código inválido','Ingresa un código válido.'); return; }
+
+  // Check in-memory DB first, then show demo fallback
+  let appt = DB.find(a => a.code === code);
+
+  if (!appt) {
+    // Demo fallback: show a fake confirmed appointment so the client can see the UI
+    const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+2);
+    const demoDate = tomorrow.toISOString().split('T')[0];
+    appt = {
+      code, status: 'confirmed',
+      clientName: 'Cliente Demo', clientPhone: '55 1234 5678',
+      barberId: 1, service: 'combo',
+      date: demoDate, time: '11:00',
+    };
+    toast('info','Demo','Mostrando cita de ejemplo.');
+  } else {
+    toast('ok','Cita encontrada',`Hola ${appt.clientName}!`);
+  }
+
+  S.appt = appt;
+  renderAppt(appt);
+}
+
+function renderAppt(appt) {
+  const brb = appt.barberId===1 ? 'Barbero 1 (Lun–Sáb)' : 'Barbero 2 (Todos los días)';
+  const isPast = new Date(`${appt.date}T${appt.time}:00`) < new Date();
+  const isCancelled = appt.status === 'cancelled';
+  const diffH = (new Date(`${appt.date}T${appt.time}:00`) - new Date()) / 3600000;
+  const canModify = !isCancelled && !isPast;
+  const canCancel = canModify && diffH >= 24;
+
+  document.getElementById('appt-info').innerHTML = `
+    <div class="ar"><label>Código</label><span style="font-family:monospace;letter-spacing:2px;color:var(--gold)">${appt.code}</span></div>
+    <div class="ar"><label>Cliente</label><span>${appt.clientName}</span></div>
+    <div class="ar"><label>Servicio</label><span>${SVCS[appt.service]||appt.service}</span></div>
+    <div class="ar"><label>Barbero</label><span>${brb}</span></div>
+    <div class="ar"><label>Fecha</label><span>${fmtDate(appt.date)}</span></div>
+    <div class="ar"><label>Hora</label><span style="color:var(--gold);font-weight:600">${appt.time}</span></div>
+    <div class="ar"><label>Estado</label><span class="badge ${appt.status==='confirmed'?'ok':'err'}">${appt.status==='confirmed'?'✅ Confirmada':'❌ Cancelada'}</span></div>
+    ${!canCancel && canModify ? `<div class="warn-note">⚠️ Solo puedes cancelar con al menos 24h de anticipación.</div>` : ''}`;
+
+  let acts = '';
+  if (canModify) acts += `<button class="btn btn-w" onclick="openEdit()" style="flex:1;justify-content:center">✏️ Modificar</button>`;
+  if (canCancel) acts += `<button class="btn btn-d" onclick="cancelAppt()" style="flex:1;justify-content:center">🗑️ Cancelar Cita</button>`;
+  document.getElementById('mg-acts').innerHTML = acts;
+  document.getElementById('appt-det').classList.add('vis');
+}
+
+function cancelAppt() {
+  if (!confirm('¿Seguro que deseas cancelar esta cita?')) return;
+  // Simulate API delay
+  const btn = document.querySelectorAll('#mg-acts .btn-d')[0];
+  if (btn) { btn.disabled=true; btn.innerHTML='<span class="spin spin-g"></span>'; }
+  setTimeout(() => {
+    S.appt.status = 'cancelled';
+    // Update in DB if exists
+    const idx = DB.findIndex(a => a.code === S.appt.code);
+    if (idx > -1) DB[idx].status = 'cancelled';
+    toast('ok','Cita cancelada','Tu cita fue cancelada exitosamente.');
+    renderAppt(S.appt);
+  }, 900);
+}
+
+/* ════════════════════════════════════════════
+   EDIT MODAL (DEMO)
+════════════════════════════════════════════ */
+function openEdit() {
+  const appt = S.appt;
+  document.getElementById('e-svc').value = appt.service;
+  document.getElementById('e-barber').value = appt.barberId;
+  document.getElementById('e-date').value = appt.date;
+  S.editTime = appt.time;
+  // Set min date
+  const ed = document.getElementById('e-date');
+  ed.min = today();
+  const max = new Date(); max.setDate(max.getDate()+60);
+  ed.max = max.toISOString().split('T')[0];
+  loadEditSlots();
+  document.getElementById('modal-edit').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function loadEditSlots() {
+  const bid = parseInt(document.getElementById('e-barber').value);
+  const date = document.getElementById('e-date').value;
+  const area = document.getElementById('e-slots');
+  if (!date) { area.innerHTML=''; return; }
+
+  if (!barberWorks(bid, date)) {
+    area.innerHTML=`<div class="slots-empty" style="font-size:.78rem">🚫 El barbero no trabaja este día.</div>`;
+    return;
+  }
+
+  const busy = getBusy(bid, date);
+  const demoBusy = ['09:00','09:30','10:30','15:00','17:00'];
+  const allBusy = [...new Set([...busy, ...demoBusy])];
+
+  // Include current slot
+  if (S.appt && date === S.appt.date && bid === S.appt.barberId) {
+    const idx = allBusy.indexOf(S.appt.time);
+    if (idx > -1) allBusy.splice(idx,1);
+  }
+
+  const grid = document.createElement('div');
+  grid.className = 'slots-g';
+  allSlots().forEach(slot => {
+    const isBusy = allBusy.includes(slot);
+    const btn = document.createElement('button');
+    btn.className = 'slot' + (isBusy?' busy':'') + (slot===S.editTime?' sel':'');
+    btn.textContent = slot;
+    if (!isBusy) btn.onclick = () => {
+      S.editTime = slot;
+      grid.querySelectorAll('.slot').forEach(b=>b.classList.remove('sel'));
+      btn.classList.add('sel');
+    };
+    grid.appendChild(btn);
+  });
+  area.innerHTML='';
+  area.appendChild(grid);
+}
+
+function saveEdit() {
+  const bid = parseInt(document.getElementById('e-barber').value);
+  const date = document.getElementById('e-date').value;
+  const svc = document.getElementById('e-svc').value;
+  if (!date || !S.editTime) { toast('err','Datos incompletos','Selecciona fecha y horario.'); return; }
+
+  const btn = document.getElementById('btn-save');
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span>';
+
+  setTimeout(() => {
+    S.appt.barberId = bid;
+    S.appt.service = svc;
+    S.appt.date = date;
+    S.appt.time = S.editTime;
+    const idx = DB.findIndex(a => a.code === S.appt.code);
+    if (idx>-1) DB[idx] = {...S.appt};
+    toast('ok','Cita modificada','¡Tu cita fue actualizada!');
+    renderAppt(S.appt);
+    closeModal();
+    btn.disabled=false; btn.innerHTML='Guardar cambios';
+  }, 900);
+}
+
+function closeModal() {
+  document.getElementById('modal-edit').classList.remove('open');
+  document.body.style.overflow='';
+  const btn=document.getElementById('btn-save');
+  if(btn){btn.disabled=false;btn.innerHTML='Guardar cambios';}
+}
+
+document.getElementById('modal-edit').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-edit')) closeModal();
+});
+
+/* ════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  const di = document.getElementById('s-date');
+  if (di) {
+    di.min = today();
+    const max = new Date(); max.setDate(max.getDate()+60);
+    di.max = max.toISOString().split('T')[0];
+  }
+});
+</script>
+</body>
+</html>
