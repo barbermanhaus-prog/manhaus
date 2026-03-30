@@ -2,6 +2,9 @@
    ManHaus Barber — Frontend App
    ═══════════════════════════════════════════════ */
 
+
+   const API_URL = 'manhaus-production.up.railway.app';
+
 // ─── State ──────────────────────────────────────
 const state = {
   currentStep: 1,
