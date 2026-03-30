@@ -71,9 +71,10 @@ function generateSlots() {
 
 function barberWorksOnDay(barberId, dateStr) {
   const [y, m, d] = dateStr.split('-').map(Number);
-  const day = new Date(y, m - 1, d).getDay();
-  if (barberId === 1) return day >= 1 && day <= 6;
-  if (barberId === 2) return true;
+  // Usar UTC para evitar desfases de zona horaria en el servidor
+  const day = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+  if (barberId === 1) return day >= 1 && day <= 6; // Lun=1 … Sáb=6
+  if (barberId === 2) return true;                  // Todos los días
   return false;
 }
 
