@@ -105,7 +105,6 @@ app.get('/api/available', async (req, res) => {
       return res.status(400).json({ error: 'Faltan parámetros' });
     }
 
-    const id = parseInt(barberId);
 
     if (!barberWorksOnDay(id, date)) {
       return res.json({ available: [], worksToday: false });
