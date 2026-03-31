@@ -40,20 +40,27 @@ const Appointment = mongoose.model('Appointment', appointmentSchema);
 // ─── Helpers ──────────────────────────────────────────────────────────────
 const SERVICES = [
   { id: 'corte',  name: 'Corte de Cabello',  duration: 30, price: '₡8.000' },
-  { id: 'barba',  name: 'Arreglo de Barba', duration: 30, price: '₡5.000' },
-  { id: 'combo',  name: 'Corte + Barba',    duration: 60, price: '₡12.000' },
+  { id: 'barba',  name: 'Arreglo de Barba',  duration: 30, price: '₡5.000' },
+  { id: 'combo',  name: 'Corte + Barba',     duration: 60, price: '₡12.000' },
   { id: 'navaja', name: 'Afeitado a Navaja', duration: 45, price: '₡6.000' },
-  { id: 'nino',   name: 'Corte Niño',       duration: 30, price: '₡5.000' },
+  { id: 'nino',   name: 'Corte Niño',        duration: 30, price: '₡5.000' },
 ];
 
+// Duración en minutos por servicio (para cálculos de solapamiento)
+const SERVICE_DURATIONS = { corte: 30, barba: 30, combo: 60, navaja: 45, nino: 30 };
+
+// Slots de 9:00 a 18:30 (cada 30 min). El filtro de cierre se aplica por duración.
 function generateSlots() {
   const slots = [];
-  for (let h = 9; h < 19; h++)
-    for (let m = 0; m < 60; m += 30) {
-      if (h === 18 && m >= 30) break;
+  for (let h = 9; h <= 18; h++)
+    for (let m = 0; m < 60; m += 30)
       slots.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
-    }
-  return slots;
+  return slots; // 9:00 … 18:30
+}
+
+function toMinutes(timeStr) {
+  const [h, m] = timeStr.split(':').map(Number);
+  return h * 60 + m;
 }
 
 function barberWorksOnDay(barberId, dateStr) {
@@ -85,29 +92,42 @@ app.get('/api/services', (req, res) => res.json(SERVICES));
 // Slots disponibles
 app.get('/api/available', async (req, res) => {
   try {
-    const { barberId, date } = req.query;
+    const { barberId, date, service } = req.query;
 
     if (!barberId || !date) {
       return res.status(400).json({ error: 'Faltan parámetros' });
     }
 
     const id = Number(barberId);
-    // El input type="date" siempre envía YYYY-MM-DD — no hay que convertir nada
     if (!barberWorksOnDay(id, date)) {
       return res.json({ available: [], worksToday: false });
     }
 
+    // Duración del servicio solicitado (default 30 min)
+    const duration = SERVICE_DURATIONS[service] || 30;
+    const CLOSING = 19 * 60; // 19:00 en minutos
+
+    // Citas ya confirmadas ese día para ese barbero
     const booked = await Appointment.find({
-      barberId: id,
-      date,
-      status: 'confirmed'
-    }).select('time').lean();
+      barberId: id, date, status: 'confirmed'
+    }).select('time service').lean();
 
-    const bookedTimes = new Set((booked || []).map(a => a.time));
+    const available = generateSlots().filter(slotTime => {
+      const slotStart = toMinutes(slotTime);
+      const slotEnd   = slotStart + duration;
 
-    const available = generateSlots().filter(
-      s => !bookedTimes.has(s)
-    );
+      // 1. El servicio debe terminar a las 19:00 o antes
+      if (slotEnd > CLOSING) return false;
+
+      // 2. No debe solaparse con ninguna cita existente
+      return !booked.some(appt => {
+        const apptStart = toMinutes(appt.time);
+        const apptDur   = SERVICE_DURATIONS[appt.service] || 30;
+        const apptEnd   = apptStart + apptDur;
+        // Solapamiento: los rangos se cruzan si uno empieza antes de que el otro termine
+        return slotStart < apptEnd && apptStart < slotEnd;
+      });
+    });
 
     return res.json({ available, worksToday: true });
 

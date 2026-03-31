@@ -169,14 +169,48 @@
         <div class="form-panel active" id="panel-1">
           <div class="form-group">
             <label class="form-label">Elige tu Servicio <span class="req">*</span></label>
-            <select class="form-control" id="sel-service">
-              <option value="">— Seleccionar —</option>
-              <option value="corte">Corte de Cabello — ₡8.000 (30 min)</option>
-              <option value="barba">Arreglo de Barba — ₡5.000 (30 min)</option>
-              <option value="combo">Corte + Barba — ₡12.000 (60 min)</option>
-              <option value="navaja">Afeitado a Navaja — ₡6.000 (45 min)</option>
-              <option value="nino">Corte Niño — ₡5.000 (30 min)</option>
-            </select>
+            <div class="svc-pick-grid">
+              <div class="svc-pick" data-service="corte" onclick="selectService('corte')">
+                <span class="svc-pick-ico">💈</span>
+                <div class="svc-pick-info">
+                  <div class="svc-pick-name">Corte de Cabello</div>
+                  <div class="svc-pick-meta">⏱ 30 min</div>
+                </div>
+                <div class="svc-pick-price">₡8.000</div>
+              </div>
+              <div class="svc-pick" data-service="barba" onclick="selectService('barba')">
+                <span class="svc-pick-ico">🪒</span>
+                <div class="svc-pick-info">
+                  <div class="svc-pick-name">Arreglo de Barba</div>
+                  <div class="svc-pick-meta">⏱ 30 min</div>
+                </div>
+                <div class="svc-pick-price">₡5.000</div>
+              </div>
+              <div class="svc-pick" data-service="combo" onclick="selectService('combo')">
+                <span class="svc-pick-ico">⭐</span>
+                <div class="svc-pick-info">
+                  <div class="svc-pick-name">Corte + Barba</div>
+                  <div class="svc-pick-meta">⏱ 60 min</div>
+                </div>
+                <div class="svc-pick-price">₡12.000</div>
+              </div>
+              <div class="svc-pick" data-service="navaja" onclick="selectService('navaja')">
+                <span class="svc-pick-ico">✨</span>
+                <div class="svc-pick-info">
+                  <div class="svc-pick-name">Afeitado a Navaja</div>
+                  <div class="svc-pick-meta">⏱ 45 min</div>
+                </div>
+                <div class="svc-pick-price">₡6.000</div>
+              </div>
+              <div class="svc-pick" data-service="nino" onclick="selectService('nino')">
+                <span class="svc-pick-ico">🧒</span>
+                <div class="svc-pick-info">
+                  <div class="svc-pick-name">Corte Niño</div>
+                  <div class="svc-pick-meta">⏱ 30 min</div>
+                </div>
+                <div class="svc-pick-price">₡5.000</div>
+              </div>
+            </div>
           </div>
           <div class="form-group">
             <label class="form-label">Elige tu Barbero <span class="req">*</span></label>

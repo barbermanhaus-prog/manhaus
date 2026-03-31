@@ -10,6 +10,7 @@ const state = {
   currentStep: 1,
   barberId: null,
   service: null,
+  duration: 30,
   date: null,
   time: null,
   name: null,
@@ -27,6 +28,14 @@ const SERVICE_NAMES = {
   navaja: 'Afeitado a Navaja',
   nino:   'Corte Niño',
 };
+
+const SERVICES_DATA = [
+  { id: 'corte',  name: 'Corte de Cabello',  duration: 30, price: '₡8.000',  icon: '💈' },
+  { id: 'barba',  name: 'Arreglo de Barba',  duration: 30, price: '₡5.000',  icon: '🪒' },
+  { id: 'combo',  name: 'Corte + Barba',     duration: 60, price: '₡12.000', icon: '⭐' },
+  { id: 'navaja', name: 'Afeitado a Navaja', duration: 45, price: '₡6.000',  icon: '✨' },
+  { id: 'nino',   name: 'Corte Niño',        duration: 30, price: '₡5.000',  icon: '🧒' },
+];
 
 const DAY_NAMES = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 const MONTH_NAMES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
@@ -92,9 +101,22 @@ function goStep(n) {
   setStep(n);
 }
 
+function selectService(id) {
+  const svc = SERVICES_DATA.find(s => s.id === id);
+  if (!svc) return;
+  state.service  = svc.id;
+  state.duration = svc.duration;
+  // Reset slots cuando cambia el servicio (duración distinta puede cambiar disponibilidad)
+  state.time = null;
+  document.querySelectorAll('.svc-pick').forEach(el =>
+    el.classList.toggle('selected', el.dataset.service === id)
+  );
+  if (state.barberId && state.date) loadSlots();
+}
+
 function validateStep(s) {
   if (s === 1) {
-    if (!document.getElementById('sel-service').value) {
+    if (!state.service) {
       toast('error', 'Servicio requerido', 'Por favor selecciona un servicio.');
       return false;
     }
@@ -169,7 +191,7 @@ async function loadSlots() {
   loading.style.display = 'block';
 
   try {
-    const res = await fetch(`${API_URL}/api/available?barberId=${state.barberId}&date=${dateVal}`);
+    const res = await fetch(`${API_URL}/api/available?barberId=${state.barberId}&date=${dateVal}&service=${state.service || 'corte'}`);
     const data = await res.json();
     loading.style.display = 'none';
 
@@ -208,7 +230,7 @@ function selectSlot(time, btn) {
 
 // ─── Summary ────────────────────────────────────
 function buildSummary() {
-  const svcName = SERVICE_NAMES[document.getElementById('sel-service').value] || '—';
+  const svcName = SERVICE_NAMES[state.service] || '—';
   const barberName = state.barberId === 1 ? 'Barbero 1 (Lun–Sáb)' : 'Barbero 2 (Todos los días)';
   document.getElementById('summary-box').innerHTML = `
     <div class="summary-row">
@@ -253,7 +275,7 @@ async function confirmBooking() {
         clientPhone: state.phone,
         clientEmail: state.email,
         barberId:    state.barberId,
-        service:     document.getElementById('sel-service').value,
+        service:     state.service,
         date:        state.date,
         time:        state.time,
       }),
@@ -306,7 +328,9 @@ function resetForm() {
   state.phone = null;
   state.email = null;
 
-  document.getElementById('sel-service').value = '';
+  state.service = null;
+  state.duration = 30;
+  document.querySelectorAll('.svc-pick').forEach(el => el.classList.remove('selected'));
   document.getElementById('inp-date').value = '';
   document.getElementById('inp-name').value = '';
   document.getElementById('inp-phone').value = '';
