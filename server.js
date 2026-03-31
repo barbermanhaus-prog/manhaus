@@ -115,6 +115,12 @@ app.get('/api/available', async (req, res) => {
 
     const id = Number(barberId);
 
+    const formattedDate = new Date(date).toISOString().split('T')[0];
+
+    if (!barberWorksOnDay(id, formattedDate)) {
+      return res.json({ available: [], worksToday: false });
+    }
+
     const booked = await Appointment.find({
       barberId: id,
       date: date,
