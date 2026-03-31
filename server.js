@@ -98,13 +98,38 @@ app.get('/api/services', (req, res) => res.json(SERVICES));
 
 // Slots disponibles
 app.get('/api/available', async (req, res) => {
-  const { barberId, date } = req.query;
-  if (!barberId || !date) return res.status(400).json({ error: 'Faltan parámetros' });
-  const id = parseInt(barberId);
-  if (!barberWorksOnDay(id, date)) return res.json({ available: [], worksToday: false });
-  const booked = await Appointment.find({ barberId: id, date, status: 'confirmed' }).select('time');
-  const available = generateSlots().filter(s => !booked.map(a => a.time).includes(s));
-  res.json({ available, worksToday: true });
+  try {
+    const { barberId, date } = req.query;
+
+    if (!barberId || !date) {
+      return res.status(400).json({ error: 'Faltan parámetros' });
+    }
+
+    const id = parseInt(barberId);
+
+    if (!barberWorksOnDay(id, date)) {
+      return res.json({ available: [], worksToday: false });
+    }
+
+    const booked = await Appointment.find({
+      barberId: id,
+      date,
+      status: 'confirmed'
+    }).select('time');
+
+    // 🔥 mejora performance
+    const bookedTimes = new Set(booked.map(a => a.time));
+
+    const available = generateSlots().filter(
+      s => !bookedTimes.has(s)
+    );
+
+    return res.json({ available, worksToday: true });
+
+  } catch (error) {
+    console.error('ERROR EN /api/available:', error);
+    return res.status(500).json({ error: 'Error interno del servidor' });
+  }
 });
 
 // Crear cita
@@ -299,3 +324,4 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`🚀 ManHaus Barber en http://localhost:${PORT}`));
+//Finish
