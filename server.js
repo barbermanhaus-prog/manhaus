@@ -105,17 +105,15 @@ app.get('/api/available', async (req, res) => {
       return res.status(400).json({ error: 'Faltan parámetros' });
     }
 
-
-    if (!barberWorksOnDay(id, date)) {
-      return res.json({ available: [], worksToday: false });
-    }
-
-    console.log('barberId:', barberId);
-    console.log('date:', date);
-
     const id = Number(barberId);
 
-    const formattedDate = new Date(date).toISOString().split('T')[0];
+    // 🔥 convertir fecha correctamente (DD/MM/YYYY → YYYY-MM-DD)
+    const [day, month, year] = date.split('/');
+    const formattedDate = `${year}-${month}-${day}`;
+
+    console.log('barberId:', id);
+    console.log('date original:', date);
+    console.log('date formatted:', formattedDate);
 
     if (!barberWorksOnDay(id, formattedDate)) {
       return res.json({ available: [], worksToday: false });
@@ -123,14 +121,11 @@ app.get('/api/available', async (req, res) => {
 
     const booked = await Appointment.find({
       barberId: id,
-      date: date,
+      date: formattedDate,
       status: 'confirmed'
     }).select('time').lean();
 
-    // 🔥 mejora performance
-
     const bookedTimes = new Set((booked || []).map(a => a.time));
-
 
     const available = generateSlots().filter(
       s => !bookedTimes.has(s)
