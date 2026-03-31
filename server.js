@@ -205,10 +205,10 @@ app.put('/api/appointments/:code', async (req, res) => {
     await appt.save();
 
     res.json({ success: true, message: 'Cita modificada correctamente', appointment: appt });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error al modificar la cita' });
-  }
+  } catch (error) {
+  console.error('ERROR EN /api/available:', error);
+  return res.status(500).json({ error: error.message });
+}
 });
 
 // Cancelar cita (cliente: requiere 24h)
