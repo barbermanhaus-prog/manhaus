@@ -111,6 +111,9 @@ app.get('/api/available', async (req, res) => {
       return res.json({ available: [], worksToday: false });
     }
 
+    console.log('barberId:', barberId);
+    console.log('date:', date);
+
     const booked = await Appointment.find({
       barberId: id,
       date,
@@ -158,10 +161,10 @@ app.post('/api/appointments', async (req, res) => {
 
     res.status(201).json({ success: true, code, message: 'Cita confirmada',
       appointment: { code, clientName, barberId: id, service, date, time } });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error al crear la cita' });
-  }
+  } catch (error) {
+  console.error('ERROR EN /api/available:', error);
+  return res.status(500).json({ error: error.message });
+}
 });
 
 // Obtener cita por código (cliente)
@@ -324,4 +327,3 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`🚀 ManHaus Barber en http://localhost:${PORT}`));
-//Finish
