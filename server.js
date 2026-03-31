@@ -14,7 +14,8 @@ const generateCode = customAlphabet('ABCDEFGHJKLMNPQRSTUVWXYZ23456789', 8);
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5500',
-  process.env.FRONTEND_URL, // tu dominio de Netlify, ej: https://manhaus-barber.netlify.app
+  process.env.FRONTEND_URL, 
+  'https://manhaus-barber.netlify.app',
 ].filter(Boolean);
 
 app.use(cors({
