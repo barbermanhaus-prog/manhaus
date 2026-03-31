@@ -119,7 +119,7 @@ function validateStep(s) {
     if (!name) { toast('error', 'Nombre requerido', 'Ingresa tu nombre completo.'); return false; }
     if (!phone) { toast('error', 'Teléfono requerido', 'Ingresa tu número de teléfono.'); return false; }
     state.name = name;
-    state.phone = phone;
+    state.phone = '+506 ' + phone; // Prefijo Costa Rica
     state.email = document.getElementById('inp-email').value.trim();
   }
   return true;

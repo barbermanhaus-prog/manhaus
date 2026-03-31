@@ -10,22 +10,8 @@ const PORT = process.env.PORT || 3000;
 
 const generateCode = customAlphabet('ABCDEFGHJKLMNPQRSTUVWXYZ23456789', 8);
 
-// ─── CORS ─────────────────────────────────────────────────────────────────
-const allowedOrigins = [
-  'http://localhost:3000',
-  'http://localhost:5500',
-  process.env.FRONTEND_URL, 
-  'https://manhaus-barber.netlify.app',
-].filter(Boolean);
-
-app.use(cors({
-  origin: (origin, cb) => {
-    // Permite llamadas sin origen (Postman, Railway mismo) y los orígenes de la lista
-    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
-    cb(new Error('Not allowed by CORS'));
-  },
-  credentials: true,
-}));
+// ─── CORS — permite todos los orígenes ────────────────────────────────────
+app.use(cors());
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -53,11 +39,11 @@ const Appointment = mongoose.model('Appointment', appointmentSchema);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────
 const SERVICES = [
-  { id: 'corte',  name: 'Corte de Cabello', duration: 30, price: '₡5.000' },
-  { id: 'barba',  name: 'Arreglo de Barba', duration: 30, price: '₡3.500' },
-  { id: 'combo',  name: 'Corte + Barba',    duration: 60, price: '₡7.500' },
-  { id: 'navaja', name: 'Afeitado a Navaja',duration: 45, price: '₡4.500' },
-  { id: 'nino',   name: 'Corte Niño',       duration: 30, price: '₡3.500' },
+  { id: 'corte',  name: 'Corte de Cabello',  duration: 30, price: '₡8.000' },
+  { id: 'barba',  name: 'Arreglo de Barba', duration: 30, price: '₡5.000' },
+  { id: 'combo',  name: 'Corte + Barba',    duration: 60, price: '₡12.000' },
+  { id: 'navaja', name: 'Afeitado a Navaja', duration: 45, price: '₡6.000' },
+  { id: 'nino',   name: 'Corte Niño',       duration: 30, price: '₡5.000' },
 ];
 
 function generateSlots() {
@@ -142,7 +128,9 @@ app.post('/api/appointments', async (req, res) => {
     if (!barberWorksOnDay(id, date))
       return res.status(400).json({ error: 'El barbero no trabaja ese día' });
 
-    if (new Date(`${date}T${time}:00`) <= new Date())
+    // Comparar solo la fecha en UTC para evitar problemas de zona horaria (CR = UTC-6)
+    const todayUTC = new Date().toISOString().split('T')[0];
+    if (date < todayUTC)
       return res.status(400).json({ error: 'No puedes agendar en una fecha pasada' });
 
     const conflict = await Appointment.findOne({ barberId: id, date, time, status: 'confirmed' });
