@@ -114,14 +114,18 @@ app.get('/api/available', async (req, res) => {
     console.log('barberId:', barberId);
     console.log('date:', date);
 
+    const id = Number(barberId);
+
     const booked = await Appointment.find({
       barberId: id,
-      date,
+      date: date,
       status: 'confirmed'
-    }).select('time');
+    }).select('time').lean();
 
     // 🔥 mejora performance
-    const bookedTimes = new Set(booked.map(a => a.time));
+
+    const bookedTimes = new Set((booked || []).map(a => a.time));
+
 
     const available = generateSlots().filter(
       s => !bookedTimes.has(s)
