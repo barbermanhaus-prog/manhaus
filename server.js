@@ -331,4 +331,4 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`🚀 ManHaus Barber en http://localhost:${PORT}`));
-//final1
+//final
