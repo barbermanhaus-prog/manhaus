@@ -106,22 +106,14 @@ app.get('/api/available', async (req, res) => {
     }
 
     const id = Number(barberId);
-
-    // 🔥 convertir fecha correctamente (DD/MM/YYYY → YYYY-MM-DD)
-    const [day, month, year] = date.split('/');
-    const formattedDate = `${year}-${month}-${day}`;
-
-    console.log('barberId:', id);
-    console.log('date original:', date);
-    console.log('date formatted:', formattedDate);
-
-    if (!barberWorksOnDay(id, formattedDate)) {
+    // El input type="date" siempre envía YYYY-MM-DD — no hay que convertir nada
+    if (!barberWorksOnDay(id, date)) {
       return res.json({ available: [], worksToday: false });
     }
 
     const booked = await Appointment.find({
       barberId: id,
-      date: formattedDate,
+      date,
       status: 'confirmed'
     }).select('time').lean();
 
