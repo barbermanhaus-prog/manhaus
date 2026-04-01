@@ -42,12 +42,11 @@ const SERVICES = [
   { id: 'corte',  name: 'Corte de Cabello',  duration: 30, price: '₡8.000' },
   { id: 'barba',  name: 'Arreglo de Barba',  duration: 30, price: '₡5.000' },
   { id: 'combo',  name: 'Corte + Barba',     duration: 60, price: '₡12.000' },
-  { id: 'navaja', name: 'Afeitado a Navaja', duration: 45, price: '₡6.000' },
-  { id: 'nino',   name: 'Corte Niño',        duration: 30, price: '₡5.000' },
+  { id: 'nino',   name: 'Corte para Niños',  duration: 30, price: '₡6.000' },
 ];
 
 // Duración en minutos por servicio (para cálculos de solapamiento)
-const SERVICE_DURATIONS = { corte: 30, barba: 30, combo: 60, navaja: 45, nino: 30 };
+const SERVICE_DURATIONS = { corte: 30, barba: 30, combo: 60, nino: 30 };
 
 // Slots de 9:00 a 18:30 (cada 30 min). El filtro de cierre se aplica por duración.
 function generateSlots() {

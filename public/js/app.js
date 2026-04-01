@@ -25,16 +25,14 @@ const SERVICE_NAMES = {
   corte:  'Corte de Cabello',
   barba:  'Arreglo de Barba',
   combo:  'Corte + Barba',
-  navaja: 'Afeitado a Navaja',
-  nino:   'Corte Niño',
+  nino:   'Corte para Niños',
 };
 
 const SERVICES_DATA = [
   { id: 'corte',  name: 'Corte de Cabello',  duration: 30, price: '₡8.000',  icon: '💈' },
   { id: 'barba',  name: 'Arreglo de Barba',  duration: 30, price: '₡5.000',  icon: '🪒' },
   { id: 'combo',  name: 'Corte + Barba',     duration: 60, price: '₡12.000', icon: '⭐' },
-  { id: 'navaja', name: 'Afeitado a Navaja', duration: 45, price: '₡6.000',  icon: '✨' },
-  { id: 'nino',   name: 'Corte Niño',        duration: 30, price: '₡5.000',  icon: '🧒' },
+  { id: 'nino',   name: 'Corte para Niños',  duration: 30, price: '₡6.000',  icon: '🧒' },
 ];
 
 const DAY_NAMES = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];

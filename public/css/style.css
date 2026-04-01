@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════
    ManHaus Barber — Stylesheet
-   Dark luxury barbershop aesthetic
+   Black & white barbershop aesthetic with gold accents
    ═══════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Bebas+Neue&display=swap');
@@ -9,15 +9,15 @@
   --gold:       #C9A84C;
   --gold-light: #E4C876;
   --gold-dark:  #9A7A2E;
-  --black:      #0A0A0A;
-  --dark:       #111111;
-  --card:       #161616;
-  --card2:      #1C1C1C;
-  --border:     #2A2A2A;
-  --border2:    #333333;
-  --text:       #F5F5F0;
-  --text-muted: #888888;
-  --text-dim:   #555555;
+  --black:      #080808;
+  --dark:       #0F0F0F;
+  --card:       #141414;
+  --card2:      #1A1A1A;
+  --border:     #242424;
+  --border2:    #2E2E2E;
+  --text:       #F0F0F0;
+  --text-muted: #808080;
+  --text-dim:   #484848;
   --success:    #4CAF50;
   --error:      #E53935;
   --warning:    #FF9800;
@@ -70,22 +70,12 @@ body::before {
   text-decoration: none;
 }
 
-.nav-logo-icon {
-  width: 42px; height: 42px;
-  background: var(--gold);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.2rem;
+.nav-logo-img {
+  height: 48px;
+  width: auto;
+  mix-blend-mode: screen;
+  filter: brightness(1.1);
 }
-
-.nav-logo-text {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.5rem;
-  color: var(--text);
-  letter-spacing: 2px;
-}
-
-.nav-logo-text span { color: var(--gold); }
 
 .nav-links { display: flex; gap: 0.5rem; }
 
@@ -124,33 +114,29 @@ body::before {
   text-align: center;
   position: relative;
   padding: 100px 1.5rem 60px;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(201,168,76,.12) 0%, transparent 60%),
-    var(--black);
+  background: var(--black);
 }
 
 .hero-badge {
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 6px 16px;
-  background: rgba(201,168,76,.1);
-  border: 1px solid rgba(201,168,76,.3);
+  padding: 6px 20px;
+  background: transparent;
+  border: 1px solid rgba(240,240,240,.2);
   border-radius: 100px;
-  font-size: .75rem;
-  color: var(--gold);
-  letter-spacing: 2px;
+  font-size: .7rem;
+  color: var(--text-muted);
+  letter-spacing: 4px;
   text-transform: uppercase;
   margin-bottom: 1.5rem;
 }
 
-.hero-logo {
-  width: 100px; height: 100px;
+.hero-logo-img {
+  width: 160px;
+  height: auto;
   margin: 0 auto 1.5rem;
-  background: var(--card);
-  border: 2px solid var(--gold);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 3rem;
-  box-shadow: 0 0 40px rgba(201,168,76,.25);
+  display: block;
+  mix-blend-mode: screen;
+  filter: brightness(1.1);
 }
 
 .hero h1 {
@@ -276,6 +262,19 @@ section { padding: 80px 1.5rem; position: relative; z-index: 1; }
 ───────────────────────────────────────────── */
 #servicios { background: var(--dark); }
 
+/* Gold banner for section label — like the poster */
+#servicios .section-label {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--black);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: .85rem;
+  letter-spacing: 4px;
+  padding: 6px 24px;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
 .services-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -312,9 +311,10 @@ section { padding: 80px 1.5rem; position: relative; z-index: 1; }
 }
 
 .service-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.05rem;
-  font-weight: 600;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
   margin-bottom: .4rem;
 }
 
@@ -359,12 +359,12 @@ section { padding: 80px 1.5rem; position: relative; z-index: 1; }
 
 .barber-avatar {
   width: 90px; height: 90px;
-  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  background: var(--card2);
   border-radius: 50%;
   margin: 0 auto 1.25rem;
   display: flex; align-items: center; justify-content: center;
   font-size: 2.5rem;
-  border: 3px solid var(--border2);
+  border: 2px solid var(--border2);
 }
 
 .barber-name {
@@ -402,20 +402,31 @@ section { padding: 80px 1.5rem; position: relative; z-index: 1; }
 }
 
 .booking-header {
-  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+  background: var(--card2);
+  border-bottom: 1px solid var(--border);
   padding: 2rem 2.5rem;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.booking-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
 }
 
 .booking-header h2 {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 2rem;
-  color: var(--black);
-  letter-spacing: 3px;
+  color: var(--text);
+  letter-spacing: 4px;
   margin-bottom: .25rem;
 }
 
-.booking-header p { font-size: .85rem; color: rgba(10,10,10,.7); }
+.booking-header p { font-size: .85rem; color: var(--text-muted); }
 
 .booking-body { padding: 2.5rem; }
 
@@ -953,8 +964,10 @@ footer {
 .svc-pick-info { flex: 1; min-width: 0; }
 
 .svc-pick-name {
-  font-weight: 600;
-  font-size: .9rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   margin-bottom: .15rem;
 }
 

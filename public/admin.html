@@ -11,9 +11,9 @@
 html{scroll-behavior:smooth}
 :root{
   --gold:#C9A84C;--gold-l:#E4C876;--gold-d:#9A7A2E;
-  --black:#0A0A0A;--dark:#111111;--card:#161616;--card2:#1C1C1C;
-  --border:#2A2A2A;--border2:#333333;
-  --text:#F5F5F0;--muted:#888888;--dim:#555555;
+  --black:#080808;--dark:#0F0F0F;--card:#141414;--card2:#1A1A1A;
+  --border:#242424;--border2:#2E2E2E;
+  --text:#F0F0F0;--muted:#808080;--dim:#484848;
   --ok:#4CAF50;--err:#E53935;--warn:#FF9800;--info:#2196F3;
 }
 body{font-family:'Inter',sans-serif;background:var(--black);color:var(--text);min-height:100vh;line-height:1.6}
@@ -23,14 +23,14 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--text);mi
 #login-screen{
   display:flex;align-items:center;justify-content:center;
   min-height:100vh;padding:1.5rem;
-  background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(201,168,76,.1) 0%,transparent 60%),var(--black);
+  background:var(--black);
 }
 .login-card{
   background:var(--card);border:1px solid var(--border);border-radius:20px;
   padding:2.5rem 2rem;width:100%;max-width:380px;
   box-shadow:0 24px 80px rgba(0,0,0,.6);text-align:center;
 }
-.login-logo{width:72px;height:72px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1.25rem;box-shadow:0 0 32px rgba(201,168,76,.3)}
+.login-logo-img{width:90px;height:auto;display:block;margin:0 auto 1.25rem;mix-blend-mode:screen;filter:brightness(1.1)}
 .login-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:3px;margin-bottom:.2rem}
 .login-title span{color:var(--gold)}
 .login-sub{color:var(--muted);font-size:.82rem;margin-bottom:1.75rem}
@@ -57,7 +57,8 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--text);mi
   width:220px;flex-shrink:0;background:var(--dark);border-right:1px solid var(--border);
   display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50;
 }
-.sb-logo{padding:1.5rem 1.25rem;border-bottom:1px solid var(--border)}
+.sb-logo{padding:1.25rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.75rem}
+.sb-logo-img{width:38px;height:auto;mix-blend-mode:screen;filter:brightness(1.1);flex-shrink:0}
 .sb-logo-txt{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:2px}
 .sb-logo-txt span{color:var(--gold)}
 .sb-logo-sub{font-size:.68rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:.15rem}
@@ -207,7 +208,7 @@ select.fc-sm{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
 
 /* ── RESPONSIVE ────────────────────────────── */
 @media(max-width:900px){
-  .sidebar{width:60px}.sidebar .sb-logo-txt,.sidebar .sb-logo-sub,.sidebar .sb-item span,.sidebar .sb-uname,.sidebar .sb-urole{display:none}
+  .sidebar{width:60px}.sidebar .sb-logo-txt,.sidebar .sb-logo-sub,.sidebar .sb-item span,.sidebar .sb-uname,.sidebar .sb-urole,.sidebar .sb-logo>div{display:none}
   .sidebar .sb-item{padding:.8rem;justify-content:center}.sidebar .sb-footer{padding:.75rem;display:flex;justify-content:center}
   .main{margin-left:60px}
   .cal-layout{grid-template-columns:1fr}
@@ -225,7 +226,7 @@ select.fc-sm{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
 <!-- ══ LOGIN ══════════════════════════════════════════ -->
 <div id="login-screen">
   <div class="login-card">
-    <div class="login-logo">✂️</div>
+    <img src="/img/logo.png" class="login-logo-img" alt="ManHaus Barber" />
     <div class="login-title">MAN<span>HAUS</span></div>
     <div class="login-sub">Panel de Administración</div>
     <div class="login-err" id="login-err">Contraseña incorrecta</div>
@@ -242,8 +243,11 @@ select.fc-sm{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="sb-logo">
-        <div class="sb-logo-txt">MAN<span>HAUS</span></div>
-        <div class="sb-logo-sub">Admin Panel</div>
+        <img src="/img/logo.png" class="sb-logo-img" alt="ManHaus" />
+        <div>
+          <div class="sb-logo-txt">MAN<span>HAUS</span></div>
+          <div class="sb-logo-sub">Admin Panel</div>
+        </div>
       </div>
       <nav class="sb-nav">
         <div class="sb-item act" onclick="showView('dashboard')">

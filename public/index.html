@@ -6,15 +6,14 @@
   <title>ManHaus Barber — Agenda tu Cita</title>
   <meta name="description" content="Reserva tu cita en ManHaus Barber. Barbería premium con los mejores profesionales." />
   <link rel="stylesheet" href="/css/style.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✂️</text></svg>" />
+  <link rel="icon" href="/img/logo.png" />
 </head>
 <body>
 
 <!-- ═══ NAVBAR ═══════════════════════════════════════════════ -->
 <nav class="navbar">
   <a href="#inicio" class="nav-logo">
-    <div class="nav-logo-icon">✂️</div>
-    <span class="nav-logo-text">MAN<span>HAUS</span></span>
+    <img src="/img/logo.png" class="nav-logo-img" alt="ManHaus Barber" />
   </a>
   <div class="nav-links">
     <a href="#servicios" class="nav-btn nav-btn-ghost">Servicios</a>
@@ -27,7 +26,7 @@
 <!-- ═══ HERO ═════════════════════════════════════════════════ -->
 <section class="hero" id="inicio">
   <span class="hero-badge">✦ Barbería Premium ✦</span>
-  <div class="hero-logo">✂️</div>
+  <img src="/img/logo.png" class="hero-logo-img" alt="ManHaus Barber" />
   <h1>MAN<span>HAUS</span><br>BARBER</h1>
   <p class="hero-sub">El arte del corte perfecto, a tu medida</p>
   <div class="hero-cta">
@@ -83,16 +82,10 @@
         <div class="service-price">₡12.000</div>
       </div>
       <div class="service-card">
-        <span class="service-icon">✨</span>
-        <div class="service-name">Afeitado a Navaja</div>
-        <div class="service-duration">⏱ 45 min</div>
-        <div class="service-price">₡6.000</div>
-      </div>
-      <div class="service-card">
         <span class="service-icon">🧒</span>
-        <div class="service-name">Corte Niño</div>
+        <div class="service-name">Corte para Niños</div>
         <div class="service-duration">⏱ 30 min</div>
-        <div class="service-price">₡5.000</div>
+        <div class="service-price">₡6.000</div>
       </div>
     </div>
   </div>
@@ -194,21 +187,13 @@
                 </div>
                 <div class="svc-pick-price">₡12.000</div>
               </div>
-              <div class="svc-pick" data-service="navaja" onclick="selectService('navaja')">
-                <span class="svc-pick-ico">✨</span>
-                <div class="svc-pick-info">
-                  <div class="svc-pick-name">Afeitado a Navaja</div>
-                  <div class="svc-pick-meta">⏱ 45 min</div>
-                </div>
-                <div class="svc-pick-price">₡6.000</div>
-              </div>
               <div class="svc-pick" data-service="nino" onclick="selectService('nino')">
                 <span class="svc-pick-ico">🧒</span>
                 <div class="svc-pick-info">
-                  <div class="svc-pick-name">Corte Niño</div>
+                  <div class="svc-pick-name">Corte para Niños</div>
                   <div class="svc-pick-meta">⏱ 30 min</div>
                 </div>
-                <div class="svc-pick-price">₡5.000</div>
+                <div class="svc-pick-price">₡6.000</div>
               </div>
             </div>
           </div>
@@ -375,8 +360,7 @@
         <option value="corte">Corte de Cabello — ₡8.000</option>
         <option value="barba">Arreglo de Barba — ₡5.000</option>
         <option value="combo">Corte + Barba — ₡12.000</option>
-        <option value="navaja">Afeitado a Navaja — ₡6.000</option>
-        <option value="nino">Corte Niño — ₡5.000</option>
+        <option value="nino">Corte para Niños — ₡6.000</option>
       </select>
     </div>
     <div class="form-group">
