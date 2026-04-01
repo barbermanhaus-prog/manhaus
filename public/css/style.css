@@ -6,9 +6,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Bebas+Neue&display=swap');
 
 :root {
-  --gold:       #C9A84C;
-  --gold-light: #E4C876;
-  --gold-dark:  #9A7A2E;
+  --gold:       #B8B8C0;
+  --gold-light: #D4D4DC;
+  --gold-dark:  #787880;
   --black:      #080808;
   --dark:       #0F0F0F;
   --card:       #141414;
@@ -174,12 +174,12 @@ body::before {
 .btn-primary {
   background: var(--gold);
   color: var(--black);
-  box-shadow: 0 4px 24px rgba(201,168,76,.35);
+  box-shadow: 0 4px 24px rgba(184,184,192,.2);
 }
 .btn-primary:hover {
   background: var(--gold-light);
   transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(201,168,76,.45);
+  box-shadow: 0 8px 32px rgba(184,184,192,.3);
 }
 
 .btn-outline {
@@ -262,16 +262,17 @@ section { padding: 80px 1.5rem; position: relative; z-index: 1; }
 ───────────────────────────────────────────── */
 #servicios { background: var(--dark); }
 
-/* Gold banner for section label — like the poster */
+/* Silver banner for section label — like the poster */
 #servicios .section-label {
   display: inline-block;
-  background: var(--gold);
-  color: var(--black);
+  background: transparent;
+  color: var(--gold);
+  border: 1px solid var(--gold);
   font-family: 'Bebas Neue', sans-serif;
   font-size: .85rem;
   letter-spacing: 4px;
-  padding: 6px 24px;
-  border-radius: 4px;
+  padding: 6px 28px;
+  border-radius: 3px;
   margin-bottom: 1rem;
 }
 
@@ -296,7 +297,7 @@ section { padding: 80px 1.5rem; position: relative; z-index: 1; }
 .service-card::before {
   content: '';
   position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(201,168,76,.06), transparent);
+  background: linear-gradient(135deg, rgba(184,184,192,.06), transparent);
   opacity: 0;
   transition: opacity .25s;
 }
@@ -473,8 +474,8 @@ section { padding: 80px 1.5rem; position: relative; z-index: 1; }
 .step-item.active .step-circle {
   border-color: var(--gold);
   color: var(--gold);
-  background: rgba(201,168,76,.1);
-  box-shadow: 0 0 16px rgba(201,168,76,.3);
+  background: rgba(184,184,192,.1);
+  box-shadow: 0 0 16px rgba(184,184,192,.3);
 }
 
 .step-item.done .step-circle {
@@ -558,7 +559,7 @@ select.form-control {
 }
 
 .barber-option:hover { border-color: var(--border2); }
-.barber-option.selected { border-color: var(--gold); background: rgba(201,168,76,.08); }
+.barber-option.selected { border-color: var(--gold); background: rgba(184,184,192,.08); }
 
 .barber-option-avatar { font-size: 1.8rem; margin-bottom: .5rem; }
 .barber-option-name { font-weight: 600; font-size: .9rem; margin-bottom: .25rem; }
@@ -846,7 +847,7 @@ select.form-control {
   display: inline-block;
 }
 .spinner-gold {
-  border-color: rgba(201,168,76,.2);
+  border-color: rgba(184,184,192,.2);
   border-top-color: var(--gold);
 }
 
@@ -920,13 +921,13 @@ footer {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(201,168,76,.06), transparent);
+  background: linear-gradient(90deg, rgba(184,184,192,.06), transparent);
   opacity: 0;
   transition: opacity .2s;
 }
 
 .svc-pick:hover {
-  border-color: rgba(201,168,76,.45);
+  border-color: rgba(184,184,192,.45);
   transform: translateX(3px);
 }
 
@@ -934,7 +935,7 @@ footer {
 
 .svc-pick.selected {
   border-color: var(--gold);
-  background: rgba(201,168,76,.08);
+  background: rgba(184,184,192,.08);
 }
 
 .svc-pick.selected::before { opacity: 1; }

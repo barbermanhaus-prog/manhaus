@@ -10,7 +10,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 :root{
-  --gold:#C9A84C;--gold-l:#E4C876;--gold-d:#9A7A2E;
+  --gold:#B8B8C0;--gold-l:#D4D4DC;--gold-d:#787880;
   --black:#080808;--dark:#0F0F0F;--card:#141414;--card2:#1A1A1A;
   --border:#242424;--border2:#2E2E2E;
   --text:#F0F0F0;--muted:#808080;--dim:#484848;
@@ -69,7 +69,7 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--text);mi
   transition:all .2s;border-left:2px solid transparent;
 }
 .sb-item:hover{color:var(--text);background:rgba(255,255,255,.03)}
-.sb-item.act{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.06)}
+.sb-item.act{color:var(--gold);border-left-color:var(--gold);background:rgba(184,184,192,.06)}
 .sb-item .ico{font-size:1rem;width:18px;text-align:center}
 .sb-footer{padding:1rem 1.25rem;border-top:1px solid var(--border)}
 .sb-user{display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem}
@@ -187,13 +187,13 @@ select.fc-sm{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
 .cal-info{flex:1;min-width:0}
 .cal-name{font-weight:500;font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cal-svc{font-size:.75rem;color:var(--muted)}
-.cal-barber{font-size:.68rem;background:rgba(201,168,76,.12);color:var(--gold);padding:2px 7px;border-radius:100px;flex-shrink:0}
+.cal-barber{font-size:.68rem;background:rgba(184,184,192,.12);color:var(--gold);padding:2px 7px;border-radius:100px;flex-shrink:0}
 .cal-empty{text-align:center;padding:2rem;color:var(--dim);font-size:.85rem}
 .day-nav{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem}
 .day-nav-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;flex:1;text-align:center}
 
 /* ── SPINNER ───────────────────────────────── */
-.spin{width:16px;height:16px;border:2px solid rgba(201,168,76,.2);border-top-color:var(--gold);border-radius:50%;animation:sp .55s linear infinite;display:inline-block;vertical-align:middle}
+.spin{width:16px;height:16px;border:2px solid rgba(184,184,192,.2);border-top-color:var(--gold);border-radius:50%;animation:sp .55s linear infinite;display:inline-block;vertical-align:middle}
 @keyframes sp{to{transform:rotate(360deg)}}
 .loading-row td{text-align:center;padding:2.5rem}
 
@@ -226,7 +226,7 @@ select.fc-sm{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
 <!-- ══ LOGIN ══════════════════════════════════════════ -->
 <div id="login-screen">
   <div class="login-card">
-    <img src="/img/logo.png" class="login-logo-img" alt="ManHaus Barber" />
+    <img src="/img/ManHausLogo.png" class="login-logo-img" alt="ManHaus Barber" />
     <div class="login-title">MAN<span>HAUS</span></div>
     <div class="login-sub">Panel de Administración</div>
     <div class="login-err" id="login-err">Contraseña incorrecta</div>
@@ -243,7 +243,7 @@ select.fc-sm{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="sb-logo">
-        <img src="/img/logo.png" class="sb-logo-img" alt="ManHaus" />
+        <img src="/img/ManHausLogo.png" class="sb-logo-img" alt="ManHaus" />
         <div>
           <div class="sb-logo-txt">MAN<span>HAUS</span></div>
           <div class="sb-logo-sub">Admin Panel</div>
